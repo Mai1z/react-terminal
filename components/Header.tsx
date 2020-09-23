@@ -1,14 +1,18 @@
 import React from 'react'
 import AppLink from './AppLink'
+import HeaderElement from '../styles/HeaderElement'
+import {Container} from '../styles/Containers'
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
     return (
-        <>
-            <AppLink label='RT' href='/'/>
-            <AppLink label='About' href='/about'/>
-        </>
+        <HeaderElement>
+            <Container>
+                <AppLink label='Main' href='/'/>
+                <AppLink label='About' href='/about'/>
+            </Container>
+        </HeaderElement>
     )
 }
 

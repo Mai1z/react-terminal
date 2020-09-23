@@ -1,7 +1,9 @@
 import {GetServerSideProps, NextPage} from 'next'
 import Layout from '../../components/Layout'
-import AppLink from '../../components/AppLink'
 import {Operator} from '../../interfaces'
+import {MainContainer} from "../../styles/Containers";
+import Form from "../../components/Form";
+
 
 
 interface PayOperatorProps {
@@ -14,8 +16,11 @@ const PayOperator: NextPage<PayOperatorProps> = ({operator}) => {
             <h1>Fail</h1>
         )
     } else return (
-        <Layout pageTitle='Index'>
-            <h1>{operator.name}</h1>
+        <Layout pageTitle={operator.name}>
+            <MainContainer>
+                <h1>{operator.name}</h1>
+                <Form />
+            </MainContainer>
         </Layout>
     )
 }

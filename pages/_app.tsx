@@ -1,9 +1,18 @@
-import type {AppProps} from 'next/app'
+import React from 'react'
+import { AppProps } from 'next/app'
+import { ThemeProvider } from 'styled-components'
+import theme from '../styles/theme'
+import GlobalStyle from '../styles/Global'
 
-export default function MyApp({Component, pageProps}: AppProps) {
+interface CustomAppProps extends AppProps {}
+
+const CustomApp: React.FC<CustomAppProps> = ({ Component, pageProps }) => {
     return (
-        <>
-            <Component {...pageProps}/>
-        </>
+        <ThemeProvider theme={theme}>
+            <Component {...pageProps} />
+            <GlobalStyle />
+        </ThemeProvider>
     )
 }
+
+export default CustomApp

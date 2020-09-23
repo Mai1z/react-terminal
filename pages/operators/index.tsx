@@ -1,22 +1,30 @@
 import {GetServerSideProps, NextPage} from 'next'
 import Layout from '../../components/Layout'
-import AppLink from '../../components/AppLink'
 import {Operator} from '../../interfaces'
+import {MainContainer} from '../../styles/Containers'
+import {OperatorButton} from '../../styles/Buttons'
+import {OperatorsList} from '../../styles/MainElements'
+import {Paragraph} from "../../styles/TextElements";
+import {useRouter} from "next/router";
 
 interface PayOperatorProps {
     operators: Operator[]
 }
 
 const PayOperator: NextPage<PayOperatorProps> = ({operators}) => {
+    const router = useRouter()
     return (
-        <Layout pageTitle='Index'>
-            <ul>
-                {operators.map(operator => (
-                    <li key={operator.id}>
-                        <AppLink label={operator.name} href={`/operators/${operator.id}`}/>
-                    </li>
-                ))}
-            </ul>
+        <Layout pageTitle='Operators'>
+            <MainContainer>
+                <Paragraph light>Choose operator:</Paragraph>
+                <OperatorsList>
+                    {operators.map(operator => (
+                        <OperatorButton key={operator.id} onClick={() => router.push(`/operators/${operator.id}`)}>
+                            {operator.name}
+                        </OperatorButton>
+                    ))}
+                </OperatorsList>
+            </MainContainer>
         </Layout>
     )
 }
