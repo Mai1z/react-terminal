@@ -2,10 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import Header from './Header'
 import Footer from './Footer'
-
-interface LayoutProps {
-    pageTitle: string
-}
+import {LayoutProps} from '../interfaces'
 
 const Layout: React.FC<LayoutProps> = ({pageTitle, children}) => {
     return (

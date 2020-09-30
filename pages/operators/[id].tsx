@@ -1,14 +1,10 @@
 import {GetServerSideProps, NextPage} from 'next'
 import Layout from '../../components/Layout'
 import {Operator} from '../../interfaces'
-import {MainContainer} from "../../styles/Containers";
-import Form from "../../components/Form";
-
-
-
-interface PayOperatorProps {
-    operator: Operator
-}
+import {MainContainer} from '../../styles/Containers'
+import {Form} from '../../components/Form'
+import {PayOperatorProps} from '../../interfaces'
+import {Title} from '../../styles/TextElements'
 
 const PayOperator: NextPage<PayOperatorProps> = ({operator}) => {
     if (operator.id === undefined) {
@@ -18,8 +14,8 @@ const PayOperator: NextPage<PayOperatorProps> = ({operator}) => {
     } else return (
         <Layout pageTitle={operator.name}>
             <MainContainer>
-                <h1>{operator.name}</h1>
-                <Form />
+                <Title>{operator.name}</Title>
+                <Form operatorName={operator.name}/>
             </MainContainer>
         </Layout>
     )

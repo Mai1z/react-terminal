@@ -4,8 +4,8 @@ import {Operator} from '../../interfaces'
 import {MainContainer} from '../../styles/Containers'
 import {OperatorButton} from '../../styles/Buttons'
 import {OperatorsList} from '../../styles/MainElements'
-import {Paragraph} from "../../styles/TextElements";
-import {useRouter} from "next/router";
+import {Paragraph} from '../../styles/TextElements'
+import {useRouter} from 'next/router'
 
 interface PayOperatorProps {
     operators: Operator[]

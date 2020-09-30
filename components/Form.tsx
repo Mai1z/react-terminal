@@ -1,115 +1,135 @@
-import React from "react";
-import MaskedInput from "react-input-mask";
-import { useForm, Controller } from "react-hook-form";
+import {useForm} from 'react-hook-form'
+import {FormData, FormProps} from '../interfaces'
+import NumberFormat from 'react-number-format'
+import React, {useState} from 'react'
+import {Button} from '../styles/Buttons'
+import {PayForm} from '../styles/MainElements'
+import Modal from 'react-modal'
+import {useRouter} from "next/router";
 
-export const clearTel = tel => tel.replace(/[^0-9]/g, "");
 
-const isNotFilledTel = v => {
-    const clearedTel = clearTel(v);
-    return clearedTel.length < 11 ? "Phone number is required." : undefined;
-};
-
-const CustomMaskedInput = props => {
-    const { value, onChange, name } = props;
-    return (
-        <MaskedInput
-            name={name}
-            value={value}
-            mask="+7 (999) 999-99-99"
-            alwaysShowMask
-            onChange={e => {
-                e.persist();
-                onChange(e.target.value);
-            }}
-        >
-            {(props) => {
-                const { onChange, ...restProps } = props;
-                return <input {...restProps} onChange={onChange} />;
-            }}
-        </MaskedInput>
-    );
-};
-
-const CustomMaskedInput2 = props => {
-    const { value, onChange, name } = props;
-    return (
-        <MaskedInput
-            name={name}
-            value={value}
-            mask="+7 (999) 999-99-99"
-            alwaysShowMask
-            onChange={e => {
-                e.persist();
-                onChange(e.target.value);
-            }}
-        >
-            {(props) => {
-                const { onChange, ...restProps } = props;
-                return <input {...restProps} onChange={onChange} />;
-            }}
-        </MaskedInput>
-    );
-};
-
-const onSubmit = data => {
-    console.log("submit", data);
-};
-
-export default function Form() {
-    const { handleSubmit, errors, control } = useForm({
+export const Form:React.FC<FormProps> = ({operatorName}) => {
+    const {register, handleSubmit, errors} = useForm<FormData>({
         reValidateMode: "onSubmit"
-    });
-    const [tel, setTel] = React.useState("7");
+    })
+
+    const [modalIsOpen, setIsOpen] = useState<boolean>(false)
+    const [serverErrors, setServerErrors] = useState<Array<string>>([])
+
+    const openModal = () => {
+        setIsOpen(true)
+    }
+
+    const ModalStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            width: '100%',
+            height: '100%',
+            maxWidth: '500px',
+            maxHeight: '500px',
+            transform: 'translate(-50%, -50%)',
+
+        },
+        overlay: {
+            background: 'rgba(12, 13, 18, 0.8)',
+            transition: '0.2s linear'
+        }
+    };
+
+    const clearTel = tel => tel.replace(/[^0-9]/g, "");
+
+    const isNotFilledTel = v => {
+        const clearedTel = clearTel(v);
+        return clearedTel.length < 11 ? "⚠ Phone number is required" : null;
+    };
+
+    const sumValue = (val: number | string) => {
+        val > 1000 ? val = '1000' : val == 0 ? val = '1' : val
+        return val + ' ₽'
+    }
+
+    const router = useRouter()
+
     return (
-        <div className="App">
-            <h1>Hello CodeSandbox</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <Controller
-                        as={<CustomMaskedInput />}
-                        value={tel}
-                        onChange={([e]) => {
-                            setTel(e);
-                            return { value: e };
-                        }}
-                        rules={{
-                            validate: {
-                                inputTelRequired: isNotFilledTel
-                            }
-                        }}
-                        defaultValue={tel}
-                        name="ContolledMaskedInput"
-                        control={control}
-                    />
+        <PayForm onSubmit={handleSubmit(async (formData) => {
+            setServerErrors([])
 
-                    {errors.ContolledMaskedInput && (
-                        <p>{errors.ContolledMaskedInput.message}</p>
-                    )}
-                </div>
-                <div>
-                    <Controller
-                        as={<CustomMaskedInput2 />}
-                        value={tel}
-                        onChange={([e]) => {
-                            setTel(e);
-                            return { value: e };
-                        }}
-                        rules={{
-                            validate: {
-                                inputTelRequired: isNotFilledTel
-                            }
-                        }}
-                        defaultValue={tel}
-                        name="ContolledMaskedInput2"
-                        control={control}
-                    />
+            const response = await fetch('/api/operators/server', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phone: formData.phone,
+                    sum: formData.sum,
+                    operator: formData.operator
+                }),
+            })
 
-                    {errors.ContolledMaskedInput2 && (
-                        <p>{errors.ContolledMaskedInput2.message}</p>
-                    )}
-                </div>
-                <input type="submit" />
-            </form>
-        </div>
-    );
+            const data = await response.json()
+
+            if (data.errors) {
+                setServerErrors([data.errors])
+            } else {
+                setServerErrors([data.message])
+            }
+            openModal()
+        })}>
+            <div>
+                <label htmlFor="phone">
+                    Phone:
+                </label>
+                <NumberFormat
+                    name="phone"
+                    id="phone"
+                    format="+7 (###) ### ## ##"
+                    mask="_"
+                    getInputRef={register({
+                        validate: {
+                            inputTelRequired: isNotFilledTel
+                        }
+                    })}
+                />
+                {errors.phone ? <p>{errors.phone.message}</p> : null}
+            </div>
+            <div>
+                <label htmlFor="sum">
+                    Sum:
+                </label>
+                <NumberFormat
+                    name="sum"
+                    id="sum"
+                    thousandSeparator={' '}
+                    format={sumValue}
+                    getInputRef={register({required: '⚠ Sum is required'})}
+                />
+                {errors.sum ? <p>{errors.sum.message}</p> : null}
+            </div>
+            <input name='operator' type="hidden" value={operatorName} ref={register()}/>
+            <Button type="submit">SUBMIT</Button>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => {
+                    if (serverErrors === ["Success!"]) {
+                        setIsOpen(false)
+                        router.push('/')
+                    } else {
+                        setIsOpen(false)
+                        console.log(serverErrors.toString)
+                    }
+
+                }}
+                style={ModalStyles}
+                ariaHideApp={false}
+                contentLabel="modal"
+            >
+                {
+                    serverErrors
+                }
+            </Modal>
+        </PayForm>
+    )
 }
