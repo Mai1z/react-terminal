@@ -25,6 +25,20 @@ const GlobalStyle = createGlobalStyle<Props>`
   ul {
     list-style: none
   }
+  .page-transition-enter {
+    opacity: 0;
+  }
+  .page-transition-enter-active {
+    opacity: 1;
+    transition: opacity 500ms;
+  }
+  .page-transition-exit {
+    opacity: 1;
+  }
+  .page-transition-exit-active {
+    opacity: 0;
+    transition: opacity 500ms;
+  }
 `
 
 export default GlobalStyle

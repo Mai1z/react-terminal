@@ -3,9 +3,9 @@ import {FormData, FormProps} from '../interfaces'
 import NumberFormat from 'react-number-format'
 import React, {useState} from 'react'
 import {Button} from '../styles/Buttons'
-import {PayForm} from '../styles/MainElements'
+import {ModalStyle, PayForm} from '../styles/MainElements'
 import Modal from 'react-modal'
-import {useRouter} from "next/router";
+import {useRouter} from 'next/router'
 
 
 export const Form:React.FC<FormProps> = ({operatorName}) => {
@@ -15,6 +15,7 @@ export const Form:React.FC<FormProps> = ({operatorName}) => {
 
     const [modalIsOpen, setIsOpen] = useState<boolean>(false)
     const [serverErrors, setServerErrors] = useState<Array<string>>([])
+    const [serverSuccess, setServerSuccess] = useState<Array<string>>([])
 
     const openModal = () => {
         setIsOpen(true)
@@ -28,10 +29,12 @@ export const Form:React.FC<FormProps> = ({operatorName}) => {
             bottom: 'auto',
             width: '100%',
             height: '100%',
-            maxWidth: '500px',
-            maxHeight: '500px',
+            maxWidth: '400px',
+            maxHeight: '400px',
             transform: 'translate(-50%, -50%)',
-
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
         },
         overlay: {
             background: 'rgba(12, 13, 18, 0.8)',
@@ -56,6 +59,7 @@ export const Form:React.FC<FormProps> = ({operatorName}) => {
     return (
         <PayForm onSubmit={handleSubmit(async (formData) => {
             setServerErrors([])
+            setServerSuccess([])
 
             const response = await fetch('/api/operators/server', {
                 method: 'POST',
@@ -72,9 +76,9 @@ export const Form:React.FC<FormProps> = ({operatorName}) => {
             const data = await response.json()
 
             if (data.errors) {
-                setServerErrors([data.errors])
+                setServerErrors([data.errors, ''])
             } else {
-                setServerErrors([data.message])
+                setServerSuccess([data.message])
             }
             openModal()
         })}>
@@ -113,12 +117,11 @@ export const Form:React.FC<FormProps> = ({operatorName}) => {
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => {
-                    if (serverErrors === ["Success!"]) {
+                    if (serverErrors.length > 0) {
                         setIsOpen(false)
-                        router.push('/')
                     } else {
                         setIsOpen(false)
-                        console.log(serverErrors.toString)
+                        router.push('/')
                     }
 
                 }}
@@ -126,9 +129,8 @@ export const Form:React.FC<FormProps> = ({operatorName}) => {
                 ariaHideApp={false}
                 contentLabel="modal"
             >
-                {
-                    serverErrors
-                }
+                <ModalStyle error>{serverErrors}</ModalStyle>
+                <ModalStyle>{serverSuccess}</ModalStyle>
             </Modal>
         </PayForm>
     )

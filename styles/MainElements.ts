@@ -29,6 +29,7 @@ export const PayForm = styled.form`
     margin: 20px auto 0;
   }
 `
-export const ModalStyle = styled.div`
-    width: 300px;
+export const ModalStyle = styled.p<{ error?: boolean }>`
+    color:${({ theme, error }) => (error ? theme.secondary : theme.success)};
+    font-size: ${({ theme, error }) => (error ? '2.5em' : '3.5em')};
 `

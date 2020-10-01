@@ -30,7 +30,7 @@ const PayOperator: NextPage<PayOperatorProps> = ({operators}) => {
 }
 
 export const getServerSideProps: GetServerSideProps<PayOperatorProps> = async (_ctx) => {
-    const data = await fetch('http://localhost:3000/api/operators')
+    const data = await fetch(`${process.env.API_URL}/api/operators`)
     const operators: Operator[] = await data.json()
     return {props: {operators}}
 }

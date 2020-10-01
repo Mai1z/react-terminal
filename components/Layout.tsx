@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Header from './Header'
 import Footer from './Footer'
 import {LayoutProps} from '../interfaces'
+import { PageTransition } from 'next-page-transitions'
 
 const Layout: React.FC<LayoutProps> = ({pageTitle, children}) => {
     return (
@@ -12,7 +13,11 @@ const Layout: React.FC<LayoutProps> = ({pageTitle, children}) => {
             </Head>
             <div>
                 <Header/>
-                <main>{children}</main>
+                <main>
+                    <PageTransition timeout={300} classNames="page-transition">
+                        {children}
+                    </PageTransition>
+                </main>
                 <Footer/>
             </div>
         </>

@@ -2,16 +2,16 @@ export interface LayoutProps {
     pageTitle: string
 }
 
-export type Operator = {
+export interface Operator {
     id: number | string
     name: string
 }
 
-export type FormProps = {
+export interface FormProps {
     operatorName: string
 }
 
-export type FormData = {
+export interface FormData {
     phone: string | number
     sum: number | string
     operator: string

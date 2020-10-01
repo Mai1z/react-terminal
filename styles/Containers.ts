@@ -14,6 +14,9 @@ export const MainContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media (max-width: 490px) {
+    height: 420px;
+  }
 `
 
 export const FooterContainer = styled.footer`
