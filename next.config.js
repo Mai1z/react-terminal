@@ -3,6 +3,6 @@ module.exports = {
         autoPrerender: false,
     },
     env: {
-        API_URL: 'http://localhost:3000'
+        API_URL: 'https://react-terminal.vercel.app'
     }
 }
