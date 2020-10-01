@@ -3,6 +3,6 @@ module.exports = {
         autoPrerender: false,
     },
     env: {
-        API_URL: 'https://react-terminal-git-vercel.vercel.app'
+        API_URL: 'https://react-terminal.vercel.app'
     }
 }
