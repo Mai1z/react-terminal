@@ -1,10 +1,10 @@
-#React Terminal
+# React Terminal
 
 ## Deployment example:
 
 ### https://react-terminal.vercel.app/
 
-##Usages:
+## Usages:
 * React, React-hooks
 * Next.js
 * TypeScrypt
